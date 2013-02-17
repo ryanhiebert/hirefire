@@ -114,8 +114,7 @@ Setting up HireFire support for Django is easy:
 #. Define as many ``hirefire.procs.Proc`` subclasses as you want HireFire
    to monitor. Have a look at your ``Procfile`` file to do it.
 
-   For example here is a ``Procfile`` with the following content
-   which uses RQ_ for the worker proccess::
+   For example here is a ``Procfile`` which uses RQ_ for the worker proccess::
 
      web: python manage.py runserver
      worker: DJANGO_SETTINGS_MODULE=mysite.settings rqworker high default low
