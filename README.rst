@@ -146,3 +146,19 @@ Setting up HireFire support for Django is easy:
    environment variable already (see above).
 
    .. _`application page`: https://manager.hirefire.io/applications
+
+#. Check that the middleware has been correctly setup by opening the
+   following URL in a browser::
+   
+     http://localhost:8000/hirefire/test
+
+   You should see an empty page with 'HireFire Middleware Found!'.
+
+   You can also have a look at the page that HireFire_ checks to get the
+   number of current tasks::
+
+     http://localhost:8000/hirefire/<HIREFIRE_TOKEN>/info
+
+   where ``<HIREFIRE_TOKEN>`` needs to be replaced with your token or
+   -- in case you haven't set the token in your settings or environment
+   -- just use ``development``.
