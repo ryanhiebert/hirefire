@@ -90,7 +90,7 @@ Django
 
 Setting up HireFire support for Django is easy:
 
-#. Add ``'hirefire.contrib.django.middleware.HireFireMiddleware' to your
+#. Add ``'hirefire.contrib.django.middleware.HireFireMiddleware'`` to your
    ``MIDDLEWARE_CLASSES`` setting::
 
      MIDDLEWARE_CLASSES = [
