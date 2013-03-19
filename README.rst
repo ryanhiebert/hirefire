@@ -44,20 +44,6 @@ queuing system.
 .. _RQ: http://python-rq.org/
 .. _`contribute other backends`: https://github.com/jezdez/hirefire/
 
-.. note::
-
-  This package is currently (02/16/2013) targetting the HireFire
-  **beta** version ("`manager.hirefire.io`_") **NOT** the old product
-  ("`monitor.hirefireapp.com`_").
-
-  See the `beta support forum`_ to `get started`_ with this improved
-  version.
-
-  .. _`beta support forum`: http://hirefireapp.tenderapp.com/kb/beta/credit-card-support
-  .. _`get started`: http://support.hirefire.io/kb/beta/getting-started-migrating-adding-applications
-  .. _`manager.hirefire.io`: http://manager.hirefire.io/
-  .. _`monitor.hirefireapp.com`: https://monitor.hirefireapp.com/
-
 Installation
 ------------
 
@@ -67,9 +53,9 @@ Install the HireFire package with your favorite installer, e.g.:
 
   pip install HireFire
 
-Sign up for the `HireFire (beta)`_ and set the ``HIREFIRE_TOKEN``
-environment variable with the `Heroku CLI`_ as provided on the
-specific HireFire `application page`_, e.g.:
+Sign up for `HireFire`_ and set the ``HIREFIRE_TOKEN`` environment variable
+with the `Heroku CLI`_ as provided on the specific HireFire `application page`_,
+e.g.:
 
 .. code-block:: bash
 
@@ -78,9 +64,12 @@ specific HireFire `application page`_, e.g.:
 Now follow the quickstart guide below and don't forget to tweak the
 options in the `HireFire management system`_.
 
+For more help see the Hirefire `documentation`_.
+
 .. _`Heroku CLI`: https://devcenter.heroku.com/articles/heroku-command
-.. _`HireFire (beta)`: https://manager.hirefire.io/
+.. _`HireFire`: http://hirefire.io/
 .. _`HireFire management system`: https://manager.hirefire.io/
+.. _documentation: http://hirefire.io/documentation/guides/getting-started
 
 Configuration
 -------------
