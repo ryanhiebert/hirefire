@@ -2,10 +2,18 @@ import datetime
 import decimal
 import json
 
-from django.utils.timezone import is_aware
+
+def is_aware(value):
+    """
+    Determines if a given datetime.datetime is aware.
+
+    The logic is described in Python's docs:
+    http://docs.python.org/library/datetime.html#datetime.tzinfo
+    """
+    return value.tzinfo is not None and value.tzinfo.utcoffset(value) is not None
 
 
-class DjangoJSONEncoder(json.JSONEncoder):
+class TimeAwareJSONEncoder(json.JSONEncoder):
     """
     JSONEncoder subclass that knows how to encode date/time and decimal types.
     """
@@ -30,4 +38,4 @@ class DjangoJSONEncoder(json.JSONEncoder):
         elif isinstance(o, decimal.Decimal):
             return str(o)
         else:
-            return super(DjangoJSONEncoder, self).default(o)
+            return super(TimeAwareJSONEncoder, self).default(o)

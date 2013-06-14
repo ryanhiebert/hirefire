@@ -8,7 +8,7 @@ from django.http import HttpResponse
 
 from hirefire import procs
 
-from .utils import DjangoJSONEncoder
+from ..utils import TimeAwareJSONEncoder
 
 
 def setting(name, default=None):
@@ -51,7 +51,7 @@ class HireFireMiddleware(object):
                 'name': name,
                 'quantity': proc.quantity() or 'null',
             })
-        payload = json.dumps(data, cls=DjangoJSONEncoder, ensure_ascii=False)
+        payload = json.dumps(data, cls=TimeAwareJSONEncoder, ensure_ascii=False)
         return HttpResponse(payload, content_type='application/json')
 
     def process_request(self, request):

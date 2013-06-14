@@ -16,7 +16,7 @@ class CeleryProc(Proc):
     :type queues: str or list
     :type app: :class:`~celery.Celery`
 
-    Declaritive example::
+    Declarative example::
 
         from celery import Celery
         from hirefire.procs.celery import CeleryProc
