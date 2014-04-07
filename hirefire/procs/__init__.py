@@ -1,4 +1,8 @@
-from ..utils import import_attribute, OrderedDict
+from collections import OrderedDict
+
+from ..utils import import_attribute
+
+import six
 
 
 __all__ = ('loaded_procs', 'Proc', 'load_proc', 'load_procs')
@@ -13,7 +17,7 @@ loaded_procs = Procs()
 def load_proc(obj):
     if isinstance(obj, Proc):
         return obj
-    elif isinstance(obj, basestring):
+    elif isinstance(obj, six.string_types):
         try:
             proc = import_attribute(obj)
         except ImportError as e:
@@ -92,7 +96,7 @@ class Proc(object):
             raise ValueError('The proc %r requires at least '
                              'one queue to check' % self)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name or 'unnamed'
 
     def __repr__(self):
