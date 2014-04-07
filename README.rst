@@ -113,7 +113,7 @@ Setting up HireFire support for Django is easy:
    and ``queues``)::
 
      from hirefire.procs.rq import RQProc
- 
+
      class WorkerProc(RQProc):
          name = 'worker'
          queues = ['high', 'default', 'low']
@@ -137,7 +137,7 @@ Setting up HireFire support for Django is easy:
 
 #. Check that the middleware has been correctly setup by opening the
    following URL in a browser::
-   
+
      http://localhost:8000/hirefire/test
 
    You should see an empty page with 'HireFire Middleware Found!'.

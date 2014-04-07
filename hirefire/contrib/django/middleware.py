@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse
 
-from hirefire import __version__ as hirefire_version, procs
+from hirefire import procs
 
 from .utils import DjangoJSONEncoder
 

@@ -30,6 +30,14 @@ Queues
    :inherited-members:
    :undoc-members:
 
+PQ
+--
+
+.. autoclass:: hirefire.procs.pq.PQProc(name=None, queues=['default'])
+   :members:
+   :inherited-members:
+   :undoc-members:
+
 RQ
 --
 
