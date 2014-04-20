@@ -5,8 +5,8 @@ import re
 import tornado.web
 
 from hirefire import __version__ as hirefire_version, procs
+from hirefire.utils import TimeAwareJSONEncoder
 
-from ..utils import TimeAwareJSONEncoder
 
 __all__ = ['hirefire_handlers']
 
