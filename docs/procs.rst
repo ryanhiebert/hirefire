@@ -30,18 +30,18 @@ Queues
    :inherited-members:
    :undoc-members:
 
-PQ
---
-
-.. autoclass:: hirefire.procs.pq.PQProc(name=None, queues=['default'])
-   :members:
-   :inherited-members:
-   :undoc-members:
-
 RQ
 --
 
 .. autoclass:: hirefire.procs.rq.RQProc(name=None, queues=['default'], connection=None)
+   :members:
+   :inherited-members:
+   :undoc-members:
+
+django-pq
+---------
+
+.. autoclass:: hirefire.procs.pq.PQProc(name=None, queues=['default'])
    :members:
    :inherited-members:
    :undoc-members:
