@@ -1,37 +1,24 @@
 import json
-import os
 import re
 
 import tornado.web
 
-from hirefire import __version__ as hirefire_version, procs
+from hirefire.procs import load_procs
 from hirefire.utils import TimeAwareJSONEncoder
 
 
 __all__ = ['hirefire_handlers']
 
 
-def setting(name, default=None):
-    return os.environ.get(name) or default
-
-
-TOKEN = setting('HIREFIRE_TOKEN', 'development')
-PROCS = setting('HIREFIRE_PROCS', [])
-
-
-def hirefire_handlers(procs):
+def hirefire_handlers(token, procs):
     if not procs:
-     raise Exception('The HireFire Tornado handler '
-                     'requires at least one proc defined.')
-
-    global PROCS
-    PROCS = procs
-
+        raise Exception('The HireFire Tornado handler '
+                        'requires at least one proc defined.')
     test_path = r'^/hirefire/test/?$'
-    info_path = r'^/hirefire/%s/info/?$' % re.escape(TOKEN)
+    info_path = r'^/hirefire/%s/info/?$' % re.escape(token)
     handlers = [
         (test_path, HireFireTestHandler),
-        (info_path, HireFireInfoHandler)
+        (info_path, HireFireInfoHandler, dict(procs=procs))
     ]
     return handlers
 
@@ -44,7 +31,7 @@ class HireFireTestHandler(tornado.web.RequestHandler):
         """
         Doesn't do much except telling the HireFire bot it's installed.
         """
-        self.write('HireFire Handler Found!')
+        self.write('HireFire Middleware Found!')
         self.finish()
 
     def get(self):
@@ -59,7 +46,9 @@ class HireFireInfoHandler(tornado.web.RequestHandler):
     RequestHandler that implements the json response that contains the procs
     data.
     """
-    loaded_procs = procs.load_procs(*PROCS)
+    def initialize(self, procs):
+        self.procs = procs
+        self.loaded_procs = load_procs(*procs)
 
     def info(self):
         """
@@ -72,7 +61,11 @@ class HireFireInfoHandler(tornado.web.RequestHandler):
                 'name': name,
                 'quantity': proc.quantity() or 'null',
             })
-        payload = json.dumps(data, cls=TimeAwareJSONEncoder, ensure_ascii=False)
+        # do the JSON dumping ourselves to be able to handle datetimes nicely
+        payload = json.dumps(data,
+                             cls=TimeAwareJSONEncoder,
+                             ensure_ascii=False).replace("</", "<\\/")
+        self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(payload)
         self.finish()
 

@@ -74,11 +74,33 @@ For more help see the Hirefire `documentation`_.
 Configuration
 -------------
 
-The ``hirefire`` Python package currently supports only one framework:
-Django. Implementations for other frameworks are planned but haven't been
-worked on: Flask_, Pyramid_ (PasteDeploy), WSGI_ middleware, ..
+The ``hirefire`` Python package currently supports two frameworks:
+Django and Tornado. Implementations for other frameworks are planned but
+haven't been worked on: Flask_, Pyramid_ (PasteDeploy), WSGI_ middleware, ..
 
 Feel free to `contribute one`_ if you can't wait.
+
+The following guides imply you have defined at least one
+``hirefire.procs.Proc`` subclass defined matching one of the processes in your
+Procfile. For each process you want to monitor you have to have one subclass.
+
+For example here is a ``Procfile`` which uses RQ_ for the "worker" proccess::
+
+  web: python manage.py runserver
+  worker: DJANGO_SETTINGS_MODULE=mysite.settings rqworker high default low
+
+Define a ``RQProc`` subclass somewhere in your project, e.g.
+``mysite/procs.py``, with the appropriate attributes (``name`` and
+``queues``)::
+
+    from hirefire.procs.rq import RQProc
+
+    class WorkerProc(RQProc):
+        name = 'worker'
+        queues = ['high', 'default', 'low']
+
+See the procs API documentation if you're using another backend. Now follow
+the framework specific guidelines below.
 
 .. _`contribute one`: https://github.com/jezdez/hirefire/
 .. _flask: http://flask.pocoo.org/
@@ -100,38 +122,19 @@ Setting up HireFire support for Django is easy:
 
    Make sure it's the first item in the list/tuple.
 
-#. Define as many ``hirefire.procs.Proc`` subclasses as you want HireFire
-   to monitor. Have a look at your ``Procfile`` file to do it.
-
-   For example here is a ``Procfile`` which uses RQ_ for the worker proccess::
-
-     web: python manage.py runserver
-     worker: DJANGO_SETTINGS_MODULE=mysite.settings rqworker high default low
-
-   Define a ``RQProc`` subclass somewhere in your Django project,
-   e.g. ``mysite/procs.py``, with the appropriate attributes (``name``
-   and ``queues``)::
-
-     from hirefire.procs.rq import RQProc
-
-     class WorkerProc(RQProc):
-         name = 'worker'
-         queues = ['high', 'default', 'low']
-
-   See the procs API documentation if you're using another backend.
-
 #. Set the ``HIREFIRE_PROCS`` setting to a list of dotted paths to your
    procs. For the above example proc::
 
      HIREFIRE_PROCS = ['mysite.procs.WorkerProc']
 
 #. Set the ``HIREFIRE_TOKEN`` setting to the token that HireFire
-   show on the specific `application page`_ (optional)::
+   shows on the specific `application page`_ (optional)::
 
      HIREFIRE_TOKEN = 'f69f0c0ddebe041248daf187caa6abb3e5d943ca'
 
    This is only needed if you haven't set the ``HIREFIRE_TOKEN``
-   environment variable already (see above).
+   environment variable already (see the installation section how to
+   do that on Heroku).
 
    .. _`application page`: https://manager.hirefire.io/applications
 
@@ -149,4 +152,48 @@ Setting up HireFire support for Django is easy:
 
    where ``<HIREFIRE_TOKEN>`` needs to be replaced with your token or
    -- in case you haven't set the token in your settings or environment
+   -- just use ``development``.
+
+Tornado
+^^^^^^^
+
+Setting up HireFire support for Tornado is also easy:
+
+#. Use ``hirefire.contrib.tornado.handlers.hirefire_handlers`` when defining
+   your ``tornado.web.Application`` instance::
+
+     import os
+     from hirefire.contrib.tornado.handlers import hirefire_handlers
+
+     application = tornado.web.Application([
+         # .. some patterns and handlers
+     ] + hirefire_handlers(os.environ['HIREFIRE_TOKEN'],
+                           ['mysite.procs.WorkerProc']))
+
+   Make sure to pass a list of dotted paths to the ``hirefire_handlers``
+   function.
+
+#. Set the ``HIREFIRE_TOKEN`` environment variable to the token that HireFire
+   shows on the specific `application page`_ (optional)::
+
+     export HIREFIRE_TOKEN='f69f0c0ddebe041248daf187caa6abb3e5d943ca'
+
+   See the installation section above for how to do that on Heroku.
+
+   .. _`application page`: https://manager.hirefire.io/applications
+
+#. Check that the handlers have been correctly setup by opening the
+   following URL in a browser::
+
+     http://localhost:8888/hirefire/test
+
+   You should see an empty page with 'HireFire Middleware Found!'.
+
+   You can also have a look at the page that HireFire_ checks to get the
+   number of current tasks::
+
+     http://localhost:8888/hirefire/<HIREFIRE_TOKEN>/info
+
+   where ``<HIREFIRE_TOKEN>`` needs to be replaced with your token or
+   -- in case you haven't set the token as an environment variable
    -- just use ``development``.

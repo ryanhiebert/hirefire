@@ -39,9 +39,10 @@ def load_procs(*procs):
 
     Example::
 
-        load('mysite.procs.WorkerCeleryProc', 'mysite.proc.ThumbnailsRQProc')
-        load(worker_rq_proc)
-        load('mysite.proc.worker_rq_proc')
+        load_procs('mysite.procs.WorkerCeleryProc',
+                   'mysite.proc.ThumbnailsRQProc')
+        load_procs(worker_rq_proc)
+        load_procs('mysite.proc.worker_rq_proc')
 
     """
     for obj in procs:

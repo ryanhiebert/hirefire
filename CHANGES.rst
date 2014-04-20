@@ -4,6 +4,7 @@
 - Got rid of d2to1 dependency.
 - Added django-pq backend.
 - Ported to Python 3.
+- Added Tornado contrib handlers.
 
 0.1
 ---
