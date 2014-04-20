@@ -47,5 +47,10 @@ Authors
 
 .. include:: ../AUTHORS.rst
 
+Changes
+-------
+
+.. include:: ../CHANGES.rst
+
 .. _HireFire: http://hirefire.io/
 .. _`Github issue tracker`: https://github.com/jezdez/hirefire/issues
