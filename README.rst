@@ -31,7 +31,7 @@ It supports the following Python queuing systems as backends:
 * Huey_
 * Queues_
 * RQ_
-* `django-pq`)
+* `django-pq`_
 
 Feel free to `contribute other backends`_ if you're using a different
 queuing system.
