@@ -16,9 +16,10 @@ def hirefire_handlers(token, procs):
                         'requires at least one proc defined.')
     test_path = r'^/hirefire/test/?$'
     info_path = r'^/hirefire/%s/info/?$' % re.escape(token)
+    HireFireInfoHandler.loaded_procs = load_procs(*procs)
     handlers = [
         (test_path, HireFireTestHandler),
-        (info_path, HireFireInfoHandler, dict(procs=procs))
+        (info_path, HireFireInfoHandler)
     ]
     return handlers
 
@@ -46,9 +47,7 @@ class HireFireInfoHandler(tornado.web.RequestHandler):
     RequestHandler that implements the json response that contains the procs
     data.
     """
-    def initialize(self, procs):
-        self.procs = procs
-        self.loaded_procs = load_procs(*procs)
+    loaded_procs = []
 
     def info(self):
         """
