@@ -1,3 +1,8 @@
+Procs
+=====
+
+This is a auto-generated list of supported ``Proc`` classes.
+
 Celery
 ------
 
