@@ -31,7 +31,7 @@ It supports the following Python queuing systems as backends:
 * Huey_
 * Queues_
 * RQ_
-* django-pq
+* `django-pq`)
 
 Feel free to `contribute other backends`_ if you're using a different
 queuing system.
@@ -43,7 +43,7 @@ queuing system.
 .. _Huey: http://huey.readthedocs.org/
 .. _Queues: http://queues.googlecode.com/
 .. _RQ: http://python-rq.org/
-.. _django-pq: https://github.com/bretth/django-pq
+.. _`django-pq`: https://github.com/bretth/django-pq
 .. _`contribute other backends`: https://github.com/jezdez/hirefire/
 
 Installation
