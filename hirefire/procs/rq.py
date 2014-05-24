@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
-from rq import Queue
+from rq import Queue, Worker
+from rq.exceptions import NoSuchJobError
 
 from . import ClientProc
 
@@ -53,4 +54,20 @@ class RQProc(ClientProc):
         """
         Returns the aggregated number of tasks of the proc queues.
         """
-        return sum([client.count for client in self.clients])
+        count = 0
+
+        for queue in self.clients:
+            # first add the count of all scheduled jobs
+            count += queue.count
+            # then add all workers which are currently working on jobs of
+            # this Proc's queues
+            for worker in Worker.all(connection=self.connection):
+                try:
+                    if (queue.name in worker.queue_names and
+                            worker.get_current_job() is not None):
+                        count += 1
+                except NoSuchJobError:
+                    # the jobs have vanished for some reason from Redis
+                    # weren't able to be fetched from the worker
+                    continue
+        return count
