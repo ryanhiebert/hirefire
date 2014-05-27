@@ -1,3 +1,11 @@
+0.2.1
+-----
+
+- Fix the RQ_ Proc implementation to take the number of task into account
+  that are currently being processed by the workers to prevent accidental
+  shutdown mid-processing. Thanks to Jason Lantz for the report and
+  initial patch.
+
 0.2
 ---
 

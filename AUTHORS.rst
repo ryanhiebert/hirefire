@@ -1,2 +1,3 @@
 - Jannis Leidel (https://www.gittip.com/jezdez/)
+- Jason Lantz
 - Shravan Reddy
