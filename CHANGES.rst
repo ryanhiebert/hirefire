@@ -1,3 +1,8 @@
+0.2.2
+-----
+
+- Fixed a regression in 0.2.1 fix. Thanks to Ryan West.
+
 0.2.1
 -----
 
