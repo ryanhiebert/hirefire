@@ -63,7 +63,7 @@ class RQProc(ClientProc):
             # this Proc's queues
             for worker in Worker.all(connection=self.connection):
                 try:
-                    if (queue.name in worker.queue_names and
+                    if (queue.name in worker.queue_names() and
                             worker.get_current_job() is not None):
                         count += 1
                 except NoSuchJobError:
