@@ -207,10 +207,9 @@ Flask
 Setting up HireFire support for Flask is (again !) also easy:
 
 #. Module ``hirefire.contrib.flask.blueprint`` provides a
-  ``build_hirefire_blueprint`` that should be called with hirefire token and
-  procs as arguments. The result is a blueprint providing the hirefire routes
-  and which should be registered inside your app.
-
+   ``build_hirefire_blueprint`` that should be called with hirefire token and
+   procs as arguments. The result is a blueprint providing the hirefire routes
+   and which should be registered inside your app.
 
      import os
      from flask import Flask
