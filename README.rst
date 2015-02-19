@@ -199,3 +199,52 @@ Setting up HireFire support for Tornado is also easy:
    where ``<HIREFIRE_TOKEN>`` needs to be replaced with your token or
    -- in case you haven't set the token as an environment variable
    -- just use ``development``.
+
+
+Flask
+^^^^^
+
+Setting up HireFire support for Flask is (again !) also easy:
+
+#. Module ``hirefire.contrib.flask.blueprint`` provides a
+  ``build_hirefire_blueprint`` that should be called with hirefire token and
+  procs as arguments. The result is a blueprint providing the hirefire routes
+  and which should be registered inside your app.
+
+
+     import os
+     from flask import Flask
+     from hirefire.contrib.flask.blueprint import build_hirefire_blueprint
+
+     app = Flask(__name__)
+     bp = build_hirefire_blueprint(os.environ['HIREFIRE_TOKEN'],
+                                   ['mysite.procs.WorkerProc'])
+     app.register_blueprint(bp)
+
+   Make sure to pass a list of dotted paths to the ``build_hirefire_blueprint``
+   function.
+
+#. Set the ``HIREFIRE_TOKEN`` environment variable to the token that HireFire
+   shows on the specific `application page`_ (optional)::
+
+     export HIREFIRE_TOKEN='f69f0c0ddebe041248daf187caa6abb3e5d943ca'
+
+   See the installation section above for how to do that on Heroku.
+
+   .. _`application page`: https://manager.hirefire.io/applications
+
+#. Check that the handlers have been correctly setup by opening the
+   following URL in a browser::
+
+     http://localhost:8080/hirefire/test
+
+   You should see an empty page with 'HireFire Middleware Found!'.
+
+   You can also have a look at the page that HireFire_ checks to get the
+   number of current tasks::
+
+     http://localhost:8080/hirefire/<HIREFIRE_TOKEN>/info
+
+   where ``<HIREFIRE_TOKEN>`` needs to be replaced with your token or
+   -- in case you haven't set the token as an environment variable
+   -- just use ``development``.
