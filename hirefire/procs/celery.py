@@ -64,4 +64,21 @@ class CeleryProc(Proc):
         """
         Returns the aggregated number of tasks of the proc queues.
         """
-        return sum([self.channel._size(queue) for queue in self.queues])
+        if hasattr(self.channel, '_size'):
+            # Redis
+            return sum(self.channel._size(queue) for queue in self.queues)
+        # AMQP
+        try:
+            from librabbitmq import ChannelError
+        except ImportError:
+            from amqp.exceptions import ChannelError
+        count = 0
+        for queue in self.queues:
+            try:
+                queue = self.channel.queue_declare(queue, passive=True)
+            except ChannelError:
+                # The requested queue has not been created yet
+                pass
+            else:
+                count += queue.message_count
+        return count
