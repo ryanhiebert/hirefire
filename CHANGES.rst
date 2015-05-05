@@ -1,3 +1,8 @@
+0.2.3
+-----
+
+Fixed Celery queue length measurement for AMQP backends.
+
 0.2.2
 -----
 
