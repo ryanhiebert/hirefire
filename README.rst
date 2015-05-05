@@ -200,16 +200,15 @@ Setting up HireFire support for Tornado is also easy:
    -- in case you haven't set the token as an environment variable
    -- just use ``development``.
 
-
 Flask
 ^^^^^
 
-Setting up HireFire support for Flask is (again !) also easy:
+Setting up HireFire support for Flask is (again!) also easy:
 
-#. Module ``hirefire.contrib.flask.blueprint`` provides a
-   ``build_hirefire_blueprint`` that should be called with hirefire token and
-   procs as arguments. The result is a blueprint providing the hirefire routes
-   and which should be registered inside your app::
+#. The module ``hirefire.contrib.flask.blueprint`` provides a
+   ``build_hirefire_blueprint`` factory function that should be called with
+   HireFire token and procs as arguments. The result is a blueprint providing
+   the hirefire routes and which should be registered inside your app::
 
      import os
      from flask import Flask

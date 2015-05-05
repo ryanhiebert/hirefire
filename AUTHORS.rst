@@ -3,3 +3,4 @@
 - Ryan West
 - Shravan Reddy
 - Marc Tamlyn
+- Emmanuel Leblond

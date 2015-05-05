@@ -1,7 +1,8 @@
-0.2.3
------
+0.3
+---
 
-Fixed Celery queue length measurement for AMQP backends.
+- Added Flask blueprint.
+- Fixed Celery queue length measurement for AMQP backends.
 
 0.2.2
 -----
