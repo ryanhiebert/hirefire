@@ -1,5 +1,4 @@
 from __future__ import absolute_import
-import json
 import os
 import re
 
@@ -7,8 +6,7 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse
 
-from hirefire import procs
-from hirefire.utils import TimeAwareJSONEncoder
+from hirefire.procs import load_procs, dump_procs, HIREFIRE_FOUND
 
 
 def setting(name, default=None):
@@ -32,28 +30,20 @@ class HireFireMiddleware(object):
     """
     test_path = re.compile(r'^/hirefire/test/?$')
     info_path = re.compile(r'^/hirefire/%s/info/?$' % re.escape(TOKEN))
-    loaded_procs = procs.load_procs(*PROCS)
+    loaded_procs = load_procs(*PROCS)
 
     def test(self, request):
         """
         Doesn't do much except telling the HireFire bot it's installed.
         """
-        return HttpResponse('HireFire Middleware Found!')
+        return HttpResponse(HIREFIRE_FOUND)
 
     def info(self, request):
         """
         The heart of the app, returning a JSON ecoded list
         of proc results.
         """
-        data = []
-        for name, proc in self.loaded_procs.items():
-            data.append({
-                'name': name,
-                'quantity': proc.quantity() or 'null',
-            })
-        payload = json.dumps(data,
-                             cls=TimeAwareJSONEncoder,
-                             ensure_ascii=False)
+        payload = dump_procs(self.loaded_procs)
         return HttpResponse(payload, content_type='application/json')
 
     def process_request(self, request):

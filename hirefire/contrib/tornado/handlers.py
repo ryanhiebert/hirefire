@@ -1,11 +1,9 @@
 from __future__ import absolute_import
-import json
 import re
 
 import tornado.web
 
-from hirefire.procs import load_procs
-from hirefire.utils import TimeAwareJSONEncoder
+from hirefire.procs import load_procs, dump_procs, HIREFIRE_FOUND
 
 
 __all__ = ['hirefire_handlers']
@@ -33,7 +31,7 @@ class HireFireTestHandler(tornado.web.RequestHandler):
         """
         Doesn't do much except telling the HireFire bot it's installed.
         """
-        self.write('HireFire Middleware Found!')
+        self.write(HIREFIRE_FOUND)
         self.finish()
 
     def get(self):
@@ -55,16 +53,8 @@ class HireFireInfoHandler(tornado.web.RequestHandler):
         The heart of the app, returning a JSON ecoded list
         of proc results.
         """
-        data = []
-        for name, proc in self.loaded_procs.items():
-            data.append({
-                'name': name,
-                'quantity': proc.quantity() or 'null',
-            })
         # do the JSON dumping ourselves to be able to handle datetimes nicely
-        payload = json.dumps(data,
-                             cls=TimeAwareJSONEncoder,
-                             ensure_ascii=False).replace("</", "<\\/")
+        payload = dump_procs(self.loaded_procs).replace("</", "<\\/")
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(payload)
         self.finish()

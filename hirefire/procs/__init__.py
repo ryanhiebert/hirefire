@@ -1,11 +1,15 @@
+import json
 from collections import OrderedDict
 
-from ..utils import import_attribute
+from ..utils import import_attribute, TimeAwareJSONEncoder
 
 import six
 
 
-__all__ = ('loaded_procs', 'Proc', 'load_proc', 'load_procs')
+__all__ = ('loaded_procs', 'Proc', 'load_proc', 'load_procs', 'dump_procs')
+
+
+HIREFIRE_FOUND = 'HireFire Middleware Found!'
 
 
 class Procs(OrderedDict):
@@ -53,6 +57,20 @@ def load_procs(*procs):
                              (proc, loaded_procs[proc.name]))
         loaded_procs[proc.name] = proc
     return loaded_procs
+
+
+def dump_procs(procs):
+    """
+    Given a list of loaded procs dumps the data for them in
+    JSON format.
+    """
+    data = []
+    for name, proc in procs.items():
+        data.append({
+            'name': name,
+            'quantity': proc.quantity() or 'null',
+        })
+    return json.dumps(data, cls=TimeAwareJSONEncoder, ensure_ascii=False)
 
 
 class Proc(object):
