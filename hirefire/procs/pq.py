@@ -42,7 +42,7 @@ class PQProc(ClientProc):
             return queue
         return Job.objects.filter(status=Job.QUEUED, queue__name=queue)
 
-    def quantity(self):
+    def quantity(self, **kwargs):
         """
         Returns the aggregated number of job of the proc queues.
         """

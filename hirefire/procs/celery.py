@@ -60,7 +60,7 @@ class CeleryProc(Proc):
         self.connection = self.app.connection()
         self.channel = self.connection.channel()
 
-    def quantity(self):
+    def quantity(self, **kwargs):
         """
         Returns the aggregated number of tasks of the proc queues.
         """

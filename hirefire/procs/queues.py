@@ -41,7 +41,7 @@ class QueuesProc(ClientProc):
             return queue
         return _queues.Queue(queue)
 
-    def quantity(self):
+    def quantity(self, **kwargs):
         """
         Returns the aggregated number of tasks of the proc queues.
         """

@@ -74,7 +74,7 @@ class HueyRedisProc(ClientProc):
             return queue
         return self.client_cls(queue, **self.connection_params)
 
-    def quantity(self):
+    def quantity(self, **kwargs):
         """
         Returns the aggregated number of tasks of the proc queues.
         """

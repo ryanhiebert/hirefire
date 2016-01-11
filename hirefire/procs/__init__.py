@@ -65,10 +65,16 @@ def dump_procs(procs):
     JSON format.
     """
     data = []
+    cache = {}
     for name, proc in procs.items():
+        try:
+            quantity = proc.quantity(cache=cache)
+        except TypeError:
+            quantity = proc.quantity()
+
         data.append({
             'name': name,
-            'quantity': proc.quantity() or 'null',
+            'quantity': quantity or 'null',
         })
     return json.dumps(data, cls=TimeAwareJSONEncoder, ensure_ascii=False)
 
@@ -123,11 +129,18 @@ class Proc(object):
         return ("<Proc %s: '%s.%s'>" %
                 (self.name, cls.__module__, cls.__name__))
 
-    def quantity(self, *args, **kwargs):
+    def quantity(self, **kwargs):
         """
         Returns the aggregated number of tasks of the proc queues.
 
         Needs to be implemented in a subclass.
+
+        ``kwargs`` must be captured even when not used, to allow for
+        future extensions.
+
+        The only kwarg currently implemented is ``cache``, which is
+        a dictionary made available for cross-proc caching. It is
+        empty when the first proc is processed.
         """
         raise NotImplementedError
 

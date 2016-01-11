@@ -50,7 +50,7 @@ class RQProc(ClientProc):
             return queue
         return Queue(queue, connection=self.connection)
 
-    def quantity(self):
+    def quantity(self, **kwargs):
         """
         Returns the aggregated number of tasks of the proc queues.
         """
