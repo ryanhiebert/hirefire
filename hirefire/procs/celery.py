@@ -28,7 +28,7 @@ class CeleryInspector(KeyDefaultDict):
         if self.route_queues is not None:
             return self.route_queues
 
-        worker_queues = self.app.control.inspect().active_queues() or {}
+        worker_queues = self.inspect['active_queues']
         active_queues = chain.from_iterable(worker_queues.values())
 
         self.route_queues = {
@@ -36,6 +36,23 @@ class CeleryInspector(KeyDefaultDict):
             for queue in active_queues
         }
         return self.route_queues
+
+    @property
+    def inspect(self):
+        """Proxy the inspector.
+
+        Make it easy to get the return value from an inspect method.
+        Use it like a dictionary, with the desired method as the key.
+        """
+        allowed_methods = ['active_queues', 'active', 'reserved', 'scheduled']
+        inspect = self.app.control.inspect()
+
+        def get_inspect_value(method):
+            if method not in allowed_methods:
+                raise KeyError('Method not allowed: {}'.format(method))
+            return getattr(inspect, method)() or {}
+
+        return KeyDefaultDict(get_inspect_value)
 
     def get_queue_fn(self, status):
         """Get a queue identifier function for the given status.
@@ -63,9 +80,8 @@ class CeleryInspector(KeyDefaultDict):
         if status not in ['active', 'reserved', 'scheduled']:
             raise KeyError('Invalid task status: {}'.format(status))
 
-        inspected = getattr(self.app.control.inspect(), status)()
         queues = map(self.get_queue_fn(status),
-                     chain.from_iterable(inspected.values()))
+                     chain.from_iterable(self.inspect[status].values()))
         return Counter(queues)
 
 
