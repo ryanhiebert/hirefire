@@ -28,7 +28,7 @@ class CeleryInspector(KeyDefaultDict):
         if self.route_queues is not None:
             return self.route_queues
 
-        worker_queues = self.app.control.inspect().active_queues()
+        worker_queues = self.app.control.inspect().active_queues() or {}
         active_queues = chain.from_iterable(worker_queues.values())
 
         self.route_queues = {
