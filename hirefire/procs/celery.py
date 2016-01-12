@@ -37,6 +37,24 @@ class CeleryInspector(KeyDefaultDict):
         }
         return self.route_queues
 
+    def get_queue_fn(self, status):
+        """Get a queue identifier function for the given status.
+
+        scheduled tasks have a different layout from reserved and
+        active tasks, so we need to look up the queue differently.
+        """
+        route_queues = self.get_route_queues()
+        def identify_queue(delivery_info):
+            exchange = delivery_info['exchange']
+            routing_key = delivery_info['routing_key']
+            return route_queues[exchange, routing_key]
+
+        def get_queue(task):
+            if status == 'scheduled':
+                return identify_queue(task['request']['delivery_info'])
+            return identify_queue(task['delivery_info'])
+        return get_queue
+
     def get_status_task_counts(self, status):
         """Get the tasks on all queues for the given status.
 
@@ -45,15 +63,9 @@ class CeleryInspector(KeyDefaultDict):
         if status not in ['active', 'reserved', 'scheduled']:
             raise KeyError('Invalid task status: {}'.format(status))
 
-        route_queues = self.get_route_queues()
-        def get_queue(task):
-            """Find the queue for a given task."""
-            exchange = task['delivery_info']['exchange']
-            routing_key = task['delivery_info']['routing_key']
-            return route_queues[exchange, routing_key]
-
         inspected = getattr(self.app.control.inspect(), status)()
-        queues = map(get_queue, chain.from_iterable(inspected.values()))
+        queues = map(self.get_queue_fn(status),
+                     chain.from_iterable(inspected.values()))
         return Counter(queues)
 
 
