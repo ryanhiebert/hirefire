@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from collections import Counter
 from itertools import chain
 
 from celery.app import app_or_default
@@ -45,16 +46,15 @@ class CeleryInspector(KeyDefaultDict):
             raise KeyError('Invalid task status: {}'.format(status))
 
         route_queues = self.get_route_queues()
-        inspected = getattr(self.app.control.inspect(), status)()
-
-        counts = KeyDefaultDict(lambda: 0)
-        for task in chain.from_iterable(inspected.values()):
+        def get_queue(task):
+            """Find the queue for a given task."""
             exchange = task['delivery_info']['exchange']
             routing_key = task['delivery_info']['routing_key']
-            queue = route_queues[exchange, routing_key]
-            counts[queue] += 1
+            return route_queues[exchange, routing_key]
 
-        return counts
+        inspected = getattr(self.app.control.inspect(), status)()
+        queues = map(get_queue, chain.from_iterable(inspected.values()))
+        return Counter(queues)
 
 
 class CeleryProc(Proc):
