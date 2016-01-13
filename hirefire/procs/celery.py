@@ -122,6 +122,41 @@ class CeleryProc(Proc):
             name = 'worker'
             queues = ['celery']
 
+    Querying the tasks that are on the workers is a more expensive
+    process, and if you're sure that you don't need them, then you
+    can improve the response time by not looking for some statuses.
+    The default statuses that are looked for are ``active``,
+    ``reserved``, and ``scheduled``. You can configure to *not*
+    look for those by overriding the ``inspect_statuses`` property.
+    For example, this proc would not look at any tasks held by
+    the workers.
+
+    ::
+
+        class WorkerProc(CeleryProc):
+            name = 'worker'
+            queues = ['celery']
+            inspect_statuses = []
+
+    ``scheduled`` tasks are tasks that have been triggered with an
+    ``eta``, the most common example of which is using ``retry``
+    on tasks. If you're sure you aren't using these tasks, you can
+    skip querying for these tasks.
+
+    ``reserved`` tasks are tasks that have been taken from the queue
+    by the main process (coordinator) on the worker dyno, but have
+    not yet been given to a worker run. If you've configured Celery
+    to only fetch the tasks that it is currently running, then you
+    may be able to skip querying for these tasks. See
+    http://docs.celeryproject.org/en/latest/userguide/optimizing.html#prefetch-limits
+    form more information.
+
+    ``active`` tasks are currently running tasks. If your tasks are
+    short-lived enough, then you may not need to look for these tasks.
+    If you choose to not look at active tasks, look out for
+    ``WorkerLostError`` exceptions.
+    See https://github.com/celery/celery/issues/2839 for more information.
+
     """
     #: The name of the proc (required).
     name = None
@@ -134,7 +169,7 @@ class CeleryProc(Proc):
 
     #: The Celery task status to check for on workers (optional).
     #: Valid options are 'active', 'reserved', and 'scheduled'.
-    inspect_statuses = []  # Empty to default to previous results
+    inspect_statuses = ['active', 'reserved', 'scheduled']
 
     def __init__(self, app=None, *args, **kwargs):
         super(CeleryProc, self).__init__(*args, **kwargs)
