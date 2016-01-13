@@ -80,8 +80,12 @@ class CeleryInspector(KeyDefaultDict):
         if status not in ['active', 'reserved', 'scheduled']:
             raise KeyError('Invalid task status: {}'.format(status))
 
-        queues = map(self.get_queue_fn(status),
-                     chain.from_iterable(self.inspect[status].values()))
+        tasks = chain.from_iterable(self.inspect[status].values())
+        queues = map(self.get_queue_fn(status), tasks)
+
+        if status == 'scheduled':
+            queues = set(queues)  # Only count each queue once
+
         return Counter(queues)
 
 
