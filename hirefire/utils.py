@@ -1,3 +1,4 @@
+import collections
 import datetime
 import decimal
 import json
@@ -96,3 +97,22 @@ class TimeAwareJSONEncoder(json.JSONEncoder):
             return str(o)
         else:
             return super(TimeAwareJSONEncoder, self).default(o)
+
+
+class KeyDefaultDict(collections.defaultdict):
+    """
+    A defaultdict where the default_factory can get the key as an arg.
+    """
+
+    def __missing__(self, key):
+        """Attempt calling the factory with the key.
+
+        If the normal methods don't work, try calling the
+        ``default_factory`` with the key as an arg.
+        """
+        try:
+            return super(KeyDefaultDict, self).__missing__(key)
+        except TypeError:
+            value = self.default_factory(key)
+            self[key] = value
+            return value
