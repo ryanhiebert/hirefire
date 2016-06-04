@@ -1,5 +1,10 @@
-0.3
----
+0.4 (2016-06-04)
+----------------
+
+- Removed django-pq backend since the library is unmaintained.
+
+0.3 (2015-05-05)
+----------------
 
 - Added Flask blueprint.
 - Fixed Celery queue length measurement for AMQP backends.

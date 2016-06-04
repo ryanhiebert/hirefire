@@ -42,11 +42,3 @@ RQ
    :members:
    :inherited-members:
    :undoc-members:
-
-django-pq
----------
-
-.. autoclass:: hirefire.procs.pq.PQProc(name=None, queues=['default'])
-   :members:
-   :inherited-members:
-   :undoc-members:

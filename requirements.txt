@@ -3,5 +3,4 @@ hotqueue
 huey
 queues
 rq
-django-pq
 Django
