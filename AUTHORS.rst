@@ -1,6 +1,6 @@
+- Emmanuel Leblond
 - Jannis Leidel
-- Jason Lantz
+- Marc Tamlyn
+- Ryan Hiebert
 - Ryan West
 - Shravan Reddy
-- Marc Tamlyn
-- Emmanuel Leblond

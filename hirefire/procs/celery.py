@@ -61,6 +61,7 @@ class CeleryInspector(KeyDefaultDict):
         active tasks, so we need to look up the queue differently.
         """
         route_queues = self.get_route_queues()
+
         def identify_queue(delivery_info):
             exchange = delivery_info['exchange']
             routing_key = delivery_info['routing_key']
