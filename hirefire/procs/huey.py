@@ -8,7 +8,7 @@ from . import ClientProc
 class HueyRedisProc(ClientProc):
     """
     A proc class for the redis backend of the
-    `Huey <http://huey.readthedocs.org/>`_ library.
+    `Huey <https://huey.readthedocs.io/>`_ library.
 
     :param name: the name of the proc (required)
     :param queues: list of queue names to check (required)

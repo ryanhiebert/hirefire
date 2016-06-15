@@ -39,7 +39,7 @@ queuing system.
 .. _Heroku: http://www.heroku.com/
 .. _Celery: http://celeryproject.com/
 .. _HotQueue: http://richardhenry.github.com/hotqueue/
-.. _Huey: http://huey.readthedocs.org/
+.. _Huey: https://huey.readthedocs.io/
 .. _Queues: http://queues.googlecode.com/
 .. _RQ: http://python-rq.org/
 .. _`contribute other backends`: https://github.com/jezdez/hirefire/
