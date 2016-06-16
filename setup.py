@@ -29,7 +29,7 @@ def find_version(*parts):
 setup(
     name='HireFire',
     version=find_version('hirefire', '__init__.py'),
-    url='http://hirefire.readthedocs.org/',
+    url='https://hirefire.readthedocs.io/',
     license='BSD',
     description='A Python lib to integrate with the HireFire service -- '
                 'The Heroku Proccess Manager',

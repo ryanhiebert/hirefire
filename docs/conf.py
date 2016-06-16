@@ -248,7 +248,7 @@ texinfo_documents = [
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
     'python': ('http://docs.python.org/', None),
-    'django': ('http://django.readthedocs.org/en/latest/', None),
+    'django': ('https://django.readthedocs.io/en/latest/', None),
     'celery': ('http://docs.celeryproject.org/en/latest/', None),
-    'huey': ('http://huey.readthedocs.org/en/latest/', None),
+    'huey': ('https://huey.readthedocs.io/en/latest/', None),
 }
