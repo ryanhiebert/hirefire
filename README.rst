@@ -113,9 +113,9 @@ Django
 Setting up HireFire support for Django is easy:
 
 #. Add ``'hirefire.contrib.django.middleware.HireFireMiddleware'`` to your
-   ``MIDDLEWARE_CLASSES`` setting::
-
-     MIDDLEWARE_CLASSES = [
+   ``MIDDLEWARE`` setting::
+     # Use ``MIDDLEWARE_CLASSES`` prior to Django 1.10
+     MIDDLEWARE = [
          'hirefire.contrib.django.middleware.HireFireMiddleware',
          # ...
      ]
