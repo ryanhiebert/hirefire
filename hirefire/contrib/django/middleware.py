@@ -6,6 +6,15 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse
 
+try:
+    # Django >= 1.10
+    from django.utils.deprecation import MiddlewareMixin
+except ImportError:
+    # Not required for Django <= 1.9, see:
+    # https://docs.djangoproject.com/en/1.10/topics/http/middleware/#upgrading-pre-django-1-10-style-middleware
+    MiddlewareMixin = object
+
+
 from hirefire.procs import load_procs, dump_procs, HIREFIRE_FOUND
 
 
@@ -22,7 +31,7 @@ if not PROCS:
                                'in the HIREFIRE_PROCS setting.')
 
 
-class HireFireMiddleware(object):
+class HireFireMiddleware(MiddlewareMixin):
     """
     The Django middleware that is hardwired to the URL paths
     HireFire requires. Implements the test response and the
