@@ -1,4 +1,4 @@
-celery
+celery==4.0.0
 hotqueue==0.2.7
 huey==1.2.2
 queues==0.6.3
