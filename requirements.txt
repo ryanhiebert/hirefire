@@ -1,6 +1,6 @@
 celery
 hotqueue==0.2.7
-huey
+huey==1.2.2
 queues==0.6.3
 rq
 Django==1.10.3
