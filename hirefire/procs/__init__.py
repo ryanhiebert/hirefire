@@ -74,7 +74,7 @@ def dump_procs(procs):
 
         data.append({
             'name': name,
-            'quantity': quantity or 'null',
+            'quantity': quantity or 0,
         })
     return json.dumps(data, cls=TimeAwareJSONEncoder, ensure_ascii=False)
 
