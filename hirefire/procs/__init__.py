@@ -59,10 +59,11 @@ def load_procs(*procs):
     return loaded_procs
 
 
-def dump_procs(procs):
+def native_dump_procs(procs):
     """
-    Given a list of loaded procs dumps the data for them in
-    JSON format.
+    Given a list of loaded procs, dump the data for them into
+    a list of dictionaries in the form expected by HireFire,
+    ready to be encoded into JSON.
     """
     data = []
     cache = {}
@@ -76,6 +77,15 @@ def dump_procs(procs):
             'name': name,
             'quantity': quantity or 0,
         })
+    return data
+
+
+def dump_procs(procs):
+    """
+    Given a list of loaded procs dumps the data for them in
+    JSON format.
+    """
+    data = native_dump_procs(procs)
     return json.dumps(data, cls=TimeAwareJSONEncoder, ensure_ascii=False)
 
 
