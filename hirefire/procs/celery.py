@@ -1,11 +1,15 @@
 from __future__ import absolute_import
 from collections import Counter
 from itertools import chain
+from logging import getLogger
 
 from celery.app import app_or_default
 
 from ..utils import KeyDefaultDict
 from . import Proc
+
+
+logger = getLogger('hirefire')
 
 
 class CeleryInspector(KeyDefaultDict):
@@ -77,7 +81,13 @@ class CeleryInspector(KeyDefaultDict):
             if self.simple_queues:
                 # If the exchange is '', use the routing_key instead
                 return exchange or routing_key
-            return route_queues[exchange, routing_key]
+            try:
+                return route_queues[exchange, routing_key]
+            except KeyError:
+                msg = 'exchange, routing_key pair not found: {}'.format(
+                    (exchange, routing_key))
+                logger.warning(msg)
+                return None  # Special queue name, not expected to be used
 
         def get_queue(task):
             if status == 'scheduled':
