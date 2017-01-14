@@ -13,10 +13,15 @@ class CeleryInspector(KeyDefaultDict):
     A defaultdict that manages the celery inspector cache.
     """
 
-    def __init__(self, app):
+    def __init__(self, app, simple_queues=False):
         super(CeleryInspector, self).__init__(self.get_status_task_counts)
         self.app = app
+        self.simple_queues = simple_queues
         self.route_queues = None
+
+    @classmethod
+    def simple_queues(cls, *args, **kwargs):
+        return cls(*args, simple_queues=True, **kwargs)
 
     def get_route_queues(self):
         """Find the queue to each active routing pair.
@@ -59,12 +64,19 @@ class CeleryInspector(KeyDefaultDict):
 
         scheduled tasks have a different layout from reserved and
         active tasks, so we need to look up the queue differently.
+        Additionally, if the ``simple_queues`` flag is True, then
+        we can shortcut the lookup process and avoid getting
+        the route queues.
         """
-        route_queues = self.get_route_queues()
+        if not self.simple_queues:
+            route_queues = self.get_route_queues()
 
         def identify_queue(delivery_info):
             exchange = delivery_info['exchange']
             routing_key = delivery_info['routing_key']
+            if self.simple_queues:
+                # If the exchange is '', use the routing_key instead
+                return exchange or routing_key
             return route_queues[exchange, routing_key]
 
         def get_queue(task):
@@ -162,6 +174,31 @@ class CeleryProc(Proc):
     ``WorkerLostError`` exceptions.
     See https://github.com/celery/celery/issues/2839 for more information.
 
+    If you have a particular simple case, you can use a shortcut to
+    eliminate one inspect call when inspecting statuses. The
+    ``active_queues`` inspect call is needed to map ``exchange`` and
+    ``routing_key`` back to the celery ``queue`` that it is for. If all
+    of your ``queue``, ``exchange``, and ``routing_key`` are the same
+    (which is the default in Celery), then you can use the
+    ``simple_queues = True`` flag to note that all the queues in the
+    proc use the same name for their ``exchange`` and ``routing_key``.
+    This defaults to ``False`` for backward compatibility, but if
+    your queues are using this simple setup, you're encouraged to use
+    it like so:
+
+    ::
+
+        class WorkerProc(CeleryProc):
+            name = 'worker'
+            queues = ['celery']
+            simple_queues = True
+
+    Because of how this is implemented, you will almost certainly
+    wish to use this feature on all of your procs, or on none of
+    them. This is because both variants have separate caches that
+    make separate calls to the inspect methods, so having both
+    kinds present will mean that the inspect calls will be run twice.
+
     """
     #: The name of the proc (required).
     name = None
@@ -175,6 +212,11 @@ class CeleryProc(Proc):
     #: The Celery task status to check for on workers (optional).
     #: Valid options are 'active', 'reserved', and 'scheduled'.
     inspect_statuses = ['active', 'reserved', 'scheduled']
+
+    #: Whether or not the exchange and routing_key are the same
+    #: as the queue name for the queues in this proc.
+    #: Default: False.
+    simple_queues = False
 
     def __init__(self, app=None, *args, **kwargs):
         super(CeleryProc, self).__init__(*args, **kwargs)
@@ -213,9 +255,13 @@ class CeleryProc(Proc):
 
     def inspect_count(self, cache):
         """Use Celery's inspect() methods to see tasks on workers."""
-        cache.setdefault('celery_inspect', KeyDefaultDict(CeleryInspector))
+        cache.setdefault('celery_inspect', {
+            True: KeyDefaultDict(CeleryInspector.simple_queues),
+            False: KeyDefaultDict(CeleryInspector),
+        })
+        celery_inspect = cache['celery_inspect'][self.simple_queues][self.app]
         return sum(
-            cache['celery_inspect'][self.app][status][queue]
+            celery_inspect[status][queue]
             for status in self.inspect_statuses
             for queue in self.queues
         )
