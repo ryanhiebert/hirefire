@@ -1,5 +1,5 @@
 celery
-hotqueue
+hotqueue==0.2.7
 huey
 queues
 rq
