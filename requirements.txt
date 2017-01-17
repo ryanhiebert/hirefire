@@ -1,6 +1,6 @@
 celery
 hotqueue
-huey
+huey==1.2.2
 queues
 rq
 Django
