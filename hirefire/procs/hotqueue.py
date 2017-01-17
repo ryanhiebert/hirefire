@@ -56,7 +56,7 @@ class HotQueueProc(ClientProc):
             return queue
         return HotQueue(queue, **self.connection_params)
 
-    def quantity(self. **kwargs):
+    def quantity(self, **kwargs):
         """
         Returns the aggregated number of tasks of the proc queues.
         """
