@@ -2,5 +2,5 @@ celery
 hotqueue
 huey
 queues
-rq
+rq==0.7.1
 Django
