@@ -3,4 +3,4 @@ hotqueue
 huey
 queues
 rq
-Django
+Django==1.10.5
