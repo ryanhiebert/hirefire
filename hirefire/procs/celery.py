@@ -63,8 +63,12 @@ class CeleryInspector(KeyDefaultDict):
         route_queues = self.get_route_queues()
 
         def identify_queue(delivery_info):
-            exchange = delivery_info['exchange']
             routing_key = delivery_info['routing_key']
+
+            exchange = delivery_info['exchange']
+            if not exchange:
+                exchange = routing_key
+
             return route_queues[exchange, routing_key]
 
         def get_queue(task):
