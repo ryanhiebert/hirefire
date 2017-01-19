@@ -1,0 +1,6 @@
+celery
+hotqueue
+huey
+queues
+rq
+Django
