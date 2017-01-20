@@ -2,7 +2,8 @@ sudo: false
 language: python
 python:
 - '3.6'
-script: true
+install: pip install .
+script: python -c 'import hirefire'
 branches:
   only:
   - master
