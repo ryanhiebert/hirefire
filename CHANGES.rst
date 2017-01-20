@@ -1,3 +1,10 @@
+0.5 (2017-01-20)
+----------------
+
+- Add ``simple_queues`` feature to Celery Proc, to enable optionally
+  skipping one inspect call. (#23)
+- Make the default quantity 0 by the recommendation of the HireFire team.
+
 0.4 (2016-06-04)
 ----------------
 
