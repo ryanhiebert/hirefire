@@ -1,6 +1,6 @@
-celery
-hotqueue
-huey
-queues
-rq
-Django
+celery==4.0.0
+hotqueue==0.2.7
+huey==1.2.2
+queues==0.6.3
+rq==0.6.0
+Django==1.10.3
