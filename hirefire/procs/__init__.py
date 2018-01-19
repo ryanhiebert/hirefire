@@ -1,5 +1,6 @@
 import json
 from collections import OrderedDict
+from concurrent.futures import ThreadPoolExecutor
 
 from ..utils import import_attribute, TimeAwareJSONEncoder
 
@@ -65,19 +66,23 @@ def native_dump_procs(procs):
     a list of dictionaries in the form expected by HireFire,
     ready to be encoded into JSON.
     """
-    data = []
     cache = {}
-    for name, proc in procs.items():
+    
+    def _run(args):
+        name, proc = args
         try:
             quantity = proc.quantity(cache=cache)
         except TypeError:
             quantity = proc.quantity()
-
-        data.append({
+            return {
             'name': name,
             'quantity': quantity or 0,
-        })
-    return data
+        }
+        
+    with ThreadPoolExecutor as executor:
+        # Execute all procs in parallel to avoid blocking IO
+        # especially celery which needs to open a transport to AMQP.
+        return executor.map(_run, rocs.items()))
 
 
 def dump_procs(procs):
