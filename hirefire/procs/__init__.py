@@ -79,7 +79,7 @@ def native_dump_procs(procs):
             'quantity': quantity or 0,
         }
         
-    with ThreadPoolExecutor as executor:
+    with ThreadPoolExecutor() as executor:
         # Execute all procs in parallel to avoid blocking IO
         # especially celery which needs to open a transport to AMQP.
         return executor.map(_run, rocs.items())
