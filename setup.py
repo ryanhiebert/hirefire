@@ -37,7 +37,10 @@ setup(
     author='Jannis Leidel',
     author_email='jannis@leidel.info',
     packages=find_packages(),
-    install_requires=['six'],
+    install_requires=[
+        'six',
+        'futures; python_version == "2.7"',
+    ],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
