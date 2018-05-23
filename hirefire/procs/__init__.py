@@ -1,20 +1,24 @@
 import json
+import os
 from collections import OrderedDict
 from concurrent.futures import ThreadPoolExecutor
 
-from ..utils import import_attribute, TimeAwareJSONEncoder
-
 import six
 
+from ..utils import import_attribute, TimeAwareJSONEncoder
 
-__all__ = ('loaded_procs', 'Proc', 'load_proc', 'load_procs', 'dump_procs')
-
+__all__ = (
+    'loaded_procs', 'Proc', 'load_proc', 'load_procs', 'dump_procs',
+    'serialize_procs', 'ProcSerializer',
+)
 
 HIREFIRE_FOUND = 'HireFire Middleware Found!'
+USE_CONCURRENCY = os.environ.get('HIREFIRE_USE_CONCURRENCY', False)
 
 
 class Procs(OrderedDict):
     pass
+
 
 loaded_procs = Procs()
 
@@ -60,29 +64,46 @@ def load_procs(*procs):
     return loaded_procs
 
 
-def native_dump_procs(procs):
+class ProcSerializer:
     """
-    Given a list of loaded procs, dump the data for them into
-    a list of dictionaries in the form expected by HireFire,
-    ready to be encoded into JSON.
+    Callable that transforms procs to dictionaries.
+
+    Maintains an instance cache that will be reused across calls.
     """
-    cache = {}
-    
-    def _run(args):
+    def __init__(self):
+        self.cache = {}
+
+    def __call__(self, args):
         name, proc = args
         try:
-            quantity = proc.quantity(cache=cache)
+            quantity = proc.quantity(cache=self.cache)
         except TypeError:
             quantity = proc.quantity()
-            return {
+        return {
             'name': name,
             'quantity': quantity or 0,
         }
-        
-    with ThreadPoolExecutor() as executor:
-        # Execute all procs in parallel to avoid blocking IO
-        # especially celery which needs to open a transport to AMQP.
-        return list(executor.map(_run, procs.items()))
+
+
+def serialize_procs(procs, use_concurrency=USE_CONCURRENCY,
+                    serializer_class=ProcSerializer):
+    """
+    Given a list of loaded procs, serialize the data for them into
+    a list of dictionaries in the form expected by HireFire,
+    ready to be encoded into JSON.
+    """
+    serializer = serializer_class()
+
+    if use_concurrency:
+        with ThreadPoolExecutor() as executor:
+            # Execute all procs in parallel to avoid blocking IO
+            # especially celery which needs to open a transport to AMQP.
+            proc_iterator = executor.map(serializer, procs.items())
+    else:
+        proc_iterator = map(serializer, procs.items())
+
+    # Return a list, since json.dumps does not support generators.
+    return list(proc_iterator)
 
 
 def dump_procs(procs):
@@ -90,7 +111,7 @@ def dump_procs(procs):
     Given a list of loaded procs dumps the data for them in
     JSON format.
     """
-    data = native_dump_procs(procs)
+    data = serialize_procs(procs)
     return json.dumps(data, cls=TimeAwareJSONEncoder, ensure_ascii=False)
 
 
@@ -183,6 +204,7 @@ class ClientProc(Proc):
     class for an example.
 
     """
+
     def __init__(self, *args, **kwargs):
         super(ClientProc, self).__init__(*args, **kwargs)
         self.clients = []
