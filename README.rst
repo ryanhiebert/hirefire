@@ -91,7 +91,9 @@ For example here is a ``Procfile`` which uses RQ_ for the "worker" proccess::
 
 Define a ``RQProc`` subclass somewhere in your project, e.g.
 ``mysite/procs.py``, with the appropriate attributes (``name`` and
-``queues``)::
+``queues``)
+
+.. code-block:: python
 
     from hirefire.procs.rq import RQProc
 
@@ -113,7 +115,10 @@ Django
 Setting up HireFire support for Django is easy:
 
 #. Add ``'hirefire.contrib.django.middleware.HireFireMiddleware'`` to your
-   ``MIDDLEWARE`` setting::
+   ``MIDDLEWARE`` setting
+
+   .. code-block:: python
+
      # Use ``MIDDLEWARE_CLASSES`` prior to Django 1.10
      MIDDLEWARE = [
          'hirefire.contrib.django.middleware.HireFireMiddleware',
@@ -123,12 +128,16 @@ Setting up HireFire support for Django is easy:
    Make sure it's the first item in the list/tuple.
 
 #. Set the ``HIREFIRE_PROCS`` setting to a list of dotted paths to your
-   procs. For the above example proc::
+   procs. For the above example proc
+
+   .. code-block:: python
 
      HIREFIRE_PROCS = ['mysite.procs.WorkerProc']
 
 #. Set the ``HIREFIRE_TOKEN`` setting to the token that HireFire
-   shows on the specific `application page`_ (optional)::
+   shows on the specific `application page`_ (optional)
+
+   .. code-block:: python
 
      HIREFIRE_TOKEN = 'f69f0c0ddebe041248daf187caa6abb3e5d943ca'
 
@@ -160,7 +169,9 @@ Tornado
 Setting up HireFire support for Tornado is also easy:
 
 #. Use ``hirefire.contrib.tornado.handlers.hirefire_handlers`` when defining
-   your ``tornado.web.Application`` instance::
+   your ``tornado.web.Application`` instance
+
+   .. code-block:: python
 
      import os
      from hirefire.contrib.tornado.handlers import hirefire_handlers
@@ -174,7 +185,9 @@ Setting up HireFire support for Tornado is also easy:
    function.
 
 #. Set the ``HIREFIRE_TOKEN`` environment variable to the token that HireFire
-   shows on the specific `application page`_ (optional)::
+   shows on the specific `application page`_ (optional)
+
+   .. code-block:: bash
 
      export HIREFIRE_TOKEN='f69f0c0ddebe041248daf187caa6abb3e5d943ca'
 
@@ -206,7 +219,9 @@ Setting up HireFire support for Flask is (again!) also easy:
 #. The module ``hirefire.contrib.flask.blueprint`` provides a
    ``build_hirefire_blueprint`` factory function that should be called with
    HireFire token and procs as arguments. The result is a blueprint providing
-   the hirefire routes and which should be registered inside your app::
+   the hirefire routes and which should be registered inside your app
+
+   .. code-block:: python
 
      import os
      from flask import Flask
@@ -221,7 +236,9 @@ Setting up HireFire support for Flask is (again!) also easy:
    function.
 
 #. Set the ``HIREFIRE_TOKEN`` environment variable to the token that HireFire
-   shows on the specific `application page`_ (optional)::
+   shows on the specific `application page`_ (optional)
+
+   .. code-block:: bash
 
      export HIREFIRE_TOKEN='f69f0c0ddebe041248daf187caa6abb3e5d943ca'
 
