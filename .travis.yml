@@ -2,14 +2,20 @@ sudo: false
 language: python
 python:
 - '3.6'
-install: pip install .
-script: python -c 'import hirefire'
+cache:
+- pip
+services:
+- rabbitmq
+install: pip install -Ur requirements.txt
+script: coverage run --source=hirefire -m pytest
 branches:
   only:
   - master
   - "/^\\d+(\\.\\d+)*$/"
 matrix:
   fast_finish: true
+after_success:
+- codecov
 deploy:
   provider: pypi
   user: ryanhiebert-auto
