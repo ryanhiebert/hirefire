@@ -6,8 +6,12 @@ cache:
 - pip
 services:
 - rabbitmq
-install: pip install -Ur requirements.txt
-script: coverage run --source=hirefire -m pytest
+- redis-server
+env:
+  - TOXENV = redis
+  - TOXENV = rabbitmq
+install: pip install -U tox codecov
+script: tox -e "$TOXENV"
 branches:
   only:
   - master
