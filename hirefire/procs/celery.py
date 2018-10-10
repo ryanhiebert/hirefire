@@ -5,6 +5,15 @@ from logging import getLogger
 
 from celery.app import app_or_default
 
+try:
+    from librabbitmq import ChannelError
+except ImportError:
+    try:
+        from amqp.exceptions import ChannelError
+    except ImportError:
+        # No RabbitMQ API wrapper installed, different celery broker used
+        ChannelError = Exception
+
 from ..utils import KeyDefaultDict
 from . import Proc
 
@@ -233,35 +242,35 @@ class CeleryProc(Proc):
         if app is not None:
             self.app = app
         self.app = app_or_default(self.app)
-        self.connection = self.app.connection()
-        self.channel = self.connection.channel()
+
+    @staticmethod
+    def _get_redis_task_count(channel, queue):
+        return channel.client.llen(queue)
+
+    @staticmethod
+    def _get_rabbitmq_task_count(channel, queue):
+        try:
+            return channel.queue_declare(queue=queue, passive=True).message_count
+        except ChannelError:
+            logger.warning("The requested queue %s has not been created yet", queue)
+            return 0
 
     def quantity(self, cache=None, **kwargs):
         """
         Returns the aggregated number of tasks of the proc queues.
         """
-        if hasattr(self.channel, '_size'):
+        with self.app.connection_or_acquire() as connection:
+            channel = connection.channel()
+
             # Redis
-            return sum(self.channel._size(queue) for queue in self.queues)
-        # AMQP
-        try:
-            from librabbitmq import ChannelError
-        except ImportError:
-            from amqp.exceptions import ChannelError
-        count = 0
-        for queue in self.queues:
-            try:
-                queue = self.channel.queue_declare(queue, passive=True)
-            except ChannelError:
-                # The requested queue has not been created yet
-                pass
-            else:
-                count += queue.message_count
+            if hasattr(channel, '_size'):
+                return sum(self._get_redis_task_count(channel, queue) for queue in self.queues)
 
-        if cache is not None and self.inspect_statuses:
-            count += self.inspect_count(cache)
-
-        return count
+            # RabbitMQ
+            count = sum(self._get_rabbitmq_task_count(channel, queue) for queue in self.queues)
+            if cache is not None and self.inspect_statuses:
+                count += self.inspect_count(cache)
+            return count
 
     def inspect_count(self, cache):
         """Use Celery's inspect() methods to see tasks on workers."""
