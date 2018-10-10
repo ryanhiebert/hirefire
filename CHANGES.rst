@@ -1,3 +1,11 @@
+0.6 (2018-10-10
+---------------
+
+- Use concurrent futures to reduce blocking IO (#37)
+- Add a test suite (#41)
+- Fix RabbitMQ connection `TimeoutError` (#42).
+  Acquire and dispose broker connection per request
+
 0.5 (2017-01-20)
 ----------------
 
