@@ -64,7 +64,7 @@ def load_procs(*procs):
     return loaded_procs
 
 
-class ProcSerializer:
+class ProcSerializer(object):
     """
     Callable that transforms procs to dictionaries.
 
