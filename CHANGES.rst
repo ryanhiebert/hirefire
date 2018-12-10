@@ -1,5 +1,10 @@
-0.6 (2018-10-10
----------------
+0.7 (2018-12-10)
+----------------
+
+- Make ProcSerializer inherit from object (#47)
+
+0.6 (2018-10-10)
+----------------
 
 - Use concurrent futures to reduce blocking IO (#37)
 - Add a test suite (#41)
