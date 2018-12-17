@@ -1,5 +1,6 @@
 -e .
 celery
+fakeredis
 hotqueue
 huey
 queues
