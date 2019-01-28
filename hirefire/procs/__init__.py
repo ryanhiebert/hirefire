@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from collections import OrderedDict
 from concurrent.futures import ThreadPoolExecutor
@@ -14,6 +15,8 @@ __all__ = (
 
 HIREFIRE_FOUND = 'HireFire Middleware Found!'
 USE_CONCURRENCY = os.environ.get('HIREFIRE_USE_CONCURRENCY', False)
+
+logger = logging.getLogger(__name__)
 
 
 class Procs(OrderedDict):
@@ -54,8 +57,15 @@ def load_procs(*procs):
         load_procs('mysite.proc.worker_rq_proc')
 
     """
+    queues_declared = set()
     for obj in procs:
         proc = load_proc(obj)
+        for queue in proc.queues:
+            if queue in queues_declared:
+                logger.warning('{} was already declared by another Proc. Depending on your queue backend, '
+                               'this may lead to inaccurate job counts.')
+            else:
+                queues_declared.add(queue)
         if proc.name in loaded_procs:
             raise ValueError('Given proc %r overlaps with '
                              'another already loaded proc (%r)' %
