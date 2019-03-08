@@ -1,9 +1,6 @@
 -e .
 celery
-fakeredis
-hotqueue
-huey
-queues
+redis
 rq
 Django
 pytest
