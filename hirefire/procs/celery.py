@@ -260,17 +260,17 @@ class CeleryProc(Proc):
         Returns the aggregated number of tasks of the proc queues.
         """
         with self.app.connection_or_acquire() as connection:
-            channel = connection.channel()
+            with connection.channel() as channel:
 
-            # Redis
-            if hasattr(channel, '_size'):
-                return sum(self._get_redis_task_count(channel, queue) for queue in self.queues)
+                # Redis
+                if hasattr(channel, '_size'):
+                    return sum(self._get_redis_task_count(channel, queue) for queue in self.queues)
 
-            # RabbitMQ
-            count = sum(self._get_rabbitmq_task_count(channel, queue) for queue in self.queues)
-            if cache is not None and self.inspect_statuses:
-                count += self.inspect_count(cache)
-            return count
+                # RabbitMQ
+                count = sum(self._get_rabbitmq_task_count(channel, queue) for queue in self.queues)
+                if cache is not None and self.inspect_statuses:
+                    count += self.inspect_count(cache)
+                return count
 
     def inspect_count(self, cache):
         """Use Celery's inspect() methods to see tasks on workers."""
