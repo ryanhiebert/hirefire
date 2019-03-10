@@ -1,3 +1,9 @@
+0.8 (2019-03-10)
+----------------
+
+- Make RQ proc counting more efficient and correct (#49)
+- CeleryProc close open channels (#51)
+
 0.7 (2018-12-10)
 ----------------
 
