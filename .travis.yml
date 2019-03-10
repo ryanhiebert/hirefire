@@ -34,8 +34,8 @@ jobs:
       deploy:
         provider: pypi
         user: ryanhiebert-auto
-      password:
-        secure: bRbLOOfykUfoFbKlVc5Zoe97sTfVvMZU+JdK+hp/hnQQswqjFAHn+hW+r7orPBZUxQDdEDtDR/38d3j19XRgxB2biB6vv18jBKeI/HzAfkZt274IouDgvSNdCQNJ+d8EKR6SGuHIYpfEMwLWyLPQiMk7LcpleQ2VJNb8/74mOas=
-      distributions: sdist bdist_wheel
-      on:
-        all_branches: true
+        password:
+          secure: bRbLOOfykUfoFbKlVc5Zoe97sTfVvMZU+JdK+hp/hnQQswqjFAHn+hW+r7orPBZUxQDdEDtDR/38d3j19XRgxB2biB6vv18jBKeI/HzAfkZt274IouDgvSNdCQNJ+d8EKR6SGuHIYpfEMwLWyLPQiMk7LcpleQ2VJNb8/74mOas=
+        distributions: sdist bdist_wheel
+        on:
+          all_branches: true
