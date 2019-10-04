@@ -147,6 +147,23 @@ Setting up HireFire support for Django is easy:
 
    .. _`application page`: https://manager.hirefire.io/applications
 
+#. Add ``'hirefire.contrib.django.middleware.QueueTimeMiddleware'`` to your
+   ``MIDDLEWARE`` setting to enable HireFire's `support`_ for scaling
+   according to Heroku request queue times (optional).
+
+   .. code-block:: python
+
+     # Use ``MIDDLEWARE_CLASSES`` prior to Django 1.10
+     MIDDLEWARE = [
+         'hirefire.contrib.django.middleware.HireFireMiddleware',
+         # ...
+     ]
+
+   Make sure to place it before any other item in the list/tuple so that
+   request queue time is calculated as accurately as possible.
+
+   .. _`support`: https://help.hirefire.io/article/49-logplex-queue-time
+
 #. Check that the middleware has been correctly setup by opening the
    following URL in a browser::
 
