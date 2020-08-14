@@ -252,7 +252,6 @@ class CeleryProc(Proc):
         try:
             return channel.queue_declare(queue=queue, passive=True).message_count
         except ChannelError:
-            logger.warning("The requested queue %s has not been created yet", queue)
             return 0
 
     def quantity(self, cache=None, **kwargs):
