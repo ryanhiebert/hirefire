@@ -9,3 +9,9 @@ class TestHireFireMiddleware:
 
         response = client.get('/hirefire/not-the-token-%s/info' % settings.HIREFIRE_TOKEN)
         assert response.status_code == 404
+
+
+class TestQueueTimeMiddleware:
+    def test_queue_time(self, client):
+        response = client.get('/hirefire/test', HTTP_X_REQUEST_START='946733845303')
+        assert response.status_code == 200
