@@ -1,3 +1,9 @@
+1.0 (2020-08-14)
+----------------
+
+- Remove an annoying warning (#57)
+- Output request queue time for Django (#55)
+
 0.8 (2019-03-10)
 ----------------
 
