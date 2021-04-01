@@ -1,6 +1,7 @@
 from __future__ import absolute_import
+from http import HTTPStatus
 
-from flask import Blueprint, Response
+from flask import abort, Blueprint, Response
 
 from hirefire.procs import load_procs, dump_procs, HIREFIRE_FOUND
 
@@ -32,6 +33,10 @@ def build_hirefire_blueprint(token, procs):
         The heart of the app, returning a JSON ecoded list
         of proc results.
         """
+
+        if secret != token:
+            abort(HTTPStatus.NOT_FOUND)
+
         return Response(dump_procs(loaded_procs), mimetype='application/json')
 
     return bp

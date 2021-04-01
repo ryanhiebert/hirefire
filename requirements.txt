@@ -1,5 +1,6 @@
 -e .
 celery
+flask
 redis
 rq
 Django
