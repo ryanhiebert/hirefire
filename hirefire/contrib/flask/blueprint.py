@@ -26,8 +26,8 @@ def build_hirefire_blueprint(token, procs):
         """
         return HIREFIRE_FOUND
 
-    @bp.route('/hirefire/<id>/info')
-    def info(id):
+    @bp.route('/hirefire/<secret>/info')
+    def info(secret):
         """
         The heart of the app, returning a JSON ecoded list
         of proc results.
