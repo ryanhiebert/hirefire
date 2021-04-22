@@ -74,9 +74,9 @@ For more help see the Hirefire `documentation`_.
 Configuration
 -------------
 
-The ``hirefire`` Python package currently supports two frameworks:
-Django and Tornado. Implementations for other frameworks are planned but
-haven't been worked on: Flask_, Pyramid_ (PasteDeploy), WSGI_ middleware, ..
+The ``hirefire`` Python package currently supports three frameworks:
+Django, Tornado, and Flask_. Implementations for other frameworks are planned
+but haven't been worked on: Pyramid_ (PasteDeploy), WSGI_ middleware, ..
 
 Feel free to `contribute one`_ if you can't wait.
 
@@ -104,7 +104,7 @@ Define a ``RQProc`` subclass somewhere in your project, e.g.
 See the procs API documentation if you're using another backend. Now follow
 the framework specific guidelines below.
 
-.. _`contribute one`: https://github.com/jezdez/hirefire/
+.. _`contribute one`: https://github.com/ryanhiebert/hirefire/
 .. _flask: http://flask.pocoo.org/
 .. _Pyramid: http://www.pylonsproject.org/
 .. _WSGI: http://www.python.org/dev/peps/pep-3333/
