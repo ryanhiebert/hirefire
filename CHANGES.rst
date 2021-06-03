@@ -1,3 +1,10 @@
+1.1 (2021-06-03)
+----------------
+
+- Allow startup to happen twice (#60)
+- Enforce that the HireFire token is present for flask (#61)
+- Pass arguments to the Blueprint constructor in the correct order (#62)
+
 1.0 (2020-08-14)
 ----------------
 
