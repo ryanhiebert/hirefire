@@ -17,7 +17,7 @@ def build_hirefire_blueprint(token, procs):
     if not procs:
         raise RuntimeError('At least one proc should be passed')
     loaded_procs = load_procs(*procs)
-    bp = Blueprint(__name__, 'hirefire')
+    bp = Blueprint('hirefire', __name__)
 
     @bp.route('/hirefire/test')
     def test():
